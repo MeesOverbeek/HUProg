@@ -16,4 +16,3 @@ beloning = (gemiddelde * 30.0 * 3.0)
 overzicht = 'mijn cijfers (gemiddeld een ' + str(gemiddelde) + ') levert een beloning van €' + str(beloning) + ' op!'
 
 print(overzicht)
-#dd
