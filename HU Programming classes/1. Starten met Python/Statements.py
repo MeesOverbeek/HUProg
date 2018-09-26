@@ -9,4 +9,3 @@ achternaam = 'Overbeek'
 
 mijnnaam = str(voornaam) + ' ' + str(tussenvoegsel) + ' ' + str(achternaam)
 print(mijnnaam)
-#hoi
