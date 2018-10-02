@@ -6,6 +6,11 @@ def wijzig(letterLijst):
     lijst.append('e')
     lijst.append('f')
 
+#'lijst' will be printed, it will show [a, b, c]
+#after this the function 'wijzig' will be executed
+#it will clear the list and add the letters 'd, e, f'
+#it will then print the list again
+
 print(lijst)
 wijzig(lijst)
 print(lijst)

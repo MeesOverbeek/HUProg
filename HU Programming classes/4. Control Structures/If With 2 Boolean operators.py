@@ -1,7 +1,7 @@
 #eval(input()): ask for the age of this person
 age = int(input("Geef hier je leeftijd: "))
 
-#eval(input()): as wether the person owns a Dutch passport
+#eval(input()): ask wether the person owns a Dutch passport
 nationality = str(input("Heeft u een nederlands paspoort?: "))
 
 #if-statement: when amount of points is greater than 15, the participant passed

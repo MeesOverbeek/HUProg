@@ -36,7 +36,7 @@ def ritPrijs(leeftijd, weekendrit, afstandKM):
 #there are 3 paramaters here, they will get assigned a value based on the input of the user
 userAge = int(input('Wat is je leeftijd: '))
 traveledDistance = float(input('Hoeveel kilometers heb je afgelegd: '))
-isWeekend = input('Is het weekend (Ja of Nee): ')
+isWeekend = input('Welke dag is het vandaag?: ')
 
 #the inputs will be overwritten onto the function's parameters to perform the mutations
 #this value shall be calculated and assigned onto 'finalRitprijs'
