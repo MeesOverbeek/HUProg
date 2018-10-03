@@ -1,0 +1,16 @@
+#opens the file 'kaartnummer.txt'
+#create an empty list
+#'inhoud' is assigned to the read line
+#if there is a name in the opened file it will be added to the empty list
+
+infile = open('kaartnummer.txt')
+lijst = []
+inhoud = infile.readlines()
+for naam in inhoud:
+    lijst.append(naam.split(','))
+
+#if there is a 'naam' in the list it will be printed according to the make-up
+infile.close()
+for naam in lijst:
+    print(naam[1].strip() + ' heeft kaartnummer: ' + naam[0])
+    
