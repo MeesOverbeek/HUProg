@@ -13,15 +13,20 @@ vertrekXML = xmltodict.parse(response.text)
 print('dit zijn de vertrekkende treinen: ')
 
 
-def StationLister():
+def stationlijst():
+    'stopt de api info in een dictionary'
+    eindbestemming = {}
     for vertrek in vertrekXML['ActueleVertrekTijden']['VertrekkendeTrein']:
-        eindbestemming = vertrek['EindBestemming']
+        eindbestemming[vertrek['EindBestemming']] = vertrek['VertrekTijd']
+    return eindbestemming
+def vertrekker():
+    'gebruikt de dictionary en geeft de vertrektijd'
+    lst = stationlijst()
+    entry = afstandEntry.get()
+    for vertrek in lst:
+        if vertrek == entry:
+            vertrektijd = lst[vertrek]
 
-        vertrektijd = vertrek['VertrekTijd']
-
-        vertrektijd = vertrektijd[11:16]
-
-        print('Om ' + vertrektijd + ' vertrekt een trein naar ' + eindbestemming)
-
+            showinfo(message='Om ' + vertrektijd + ' vertrekt een trein naar ' + vertrek)
 
 StationLister()
