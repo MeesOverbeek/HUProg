@@ -2,7 +2,7 @@ import requests
 import xmltodict
 
 authDetails = ('mees-overbeek@hotmail.com', 'xyy3hgLOXBq1i3sNZgp5qVwLPraeb4APZw_JI2iEB-zP3qfpfsj9fg')
-apiUrl = 'http://webservices.ns.nl/ns-api-avt?station=Utecrht'
+apiUrl = 'http://webservices.ns.nl/ns-api-avt?station=utrecht'
 response = requests.get(apiUrl, auth = authDetails)
 vertrekXML = xmltodict.parse(response.text)
 
