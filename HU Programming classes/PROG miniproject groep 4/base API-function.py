@@ -22,5 +22,5 @@ def GetDepartures(StationName):
 
         print('Om ' + vertrektijd + ' vertrekt een trein naar ' + eindbestemming)
 
-
-GetDepartures("Utrecht")
+StationName = input("Geef uw Station op: ")
+GetDepartures(StationName)
