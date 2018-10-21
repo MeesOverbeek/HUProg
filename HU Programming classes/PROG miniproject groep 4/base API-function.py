@@ -26,4 +26,5 @@ def GetDepartures(StationName):
         print("No internet connection")
 
 
-GetDepartures("Utrect")
+StationName = input("Geef uw Station op: ")
+GetDepartures(StationName)
