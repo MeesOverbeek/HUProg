@@ -29,4 +29,4 @@ def vertrekker():
 
             showinfo(message='Om ' + vertrektijd + ' vertrekt een trein naar ' + vertrek)
 
-StationLister()
+vertrekker()
