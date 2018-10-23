@@ -6,6 +6,7 @@ from tkinter import ttk
 from tkinter.messagebox import showinfo
 #from Treinfuncties import * #calls upon Treinfuncties.py
 
+vertrekXML = {}
 
 def stationClick():
     vertrekker()
@@ -26,7 +27,8 @@ def vertrekker():
     departureInformation = "";
     row = 0;
     for vertrek in vertrekXML['ActueleVertrekTijden']['VertrekkendeTrein']:
-
+        if row >= 39:
+            break
         eindbestemming = vertrek['EindBestemming']
 
         vertrektijd = vertrek['VertrekTijd']
@@ -40,31 +42,57 @@ def vertrekker():
               text= vertrektijd,
               background='yellow',
               foreground='black',
-              font=('Helvetica', 16, 'bold italic'),
+              font=('Helvetica', 10, 'bold italic'),
               anchor=W)
-        vertrektijdlabel.grid(row=row, column=0,sticky=N, pady=(8,0))
+        vertrektijdlabel.grid(row=row, column=0,sticky="ns", pady=(8,0))
         eindbestemminglabel = Label(master=departureframe,
               text= eindbestemming,
               background='yellow',
               foreground='black',
-              font=('Helvetica', 16, 'bold italic'),
+              font=('Helvetica', 10, 'bold italic'),
               anchor='w')
-        eindbestemminglabel.grid(row=row, column=1, sticky=N, pady=(8,0))
+        eindbestemminglabel.grid(row=row, column=1, sticky="ns", pady=(8,0), padx=10)
         try:
             vertrekspoorlabel = Label(master=departureframe,
                   text= "Spoor " + str(vertrek["VertrekSpoor"]["#text"]),
                   background='yellow',
                   foreground='black',
-                  font=('Helvetica', 16, 'bold italic'))
-            vertrekspoorlabel.grid(row=row, column=2, sticky=E, pady=(8,0))
+                  font=('Helvetica', 10, 'bold italic'))
+            vertrekspoorlabel.grid(row=row, column=2, sticky="ns", pady=(8,0))
         except:
             print("geen spoor")
         row += 1;
+        treinSoortLabel = Label(master=departureframe,
+                                    text=eindbestemming + " (" + str(vertrek['TreinSoort']) + ")",
+                                    background='yellow',
+                                    foreground='black',
+                                    font=('Helvetica', 10, 'bold italic'),
+                                    anchor='w')
+        treinSoortLabel.grid(row=row, column=1, sticky="ns")
+        row += 1;
+        try:
+            viaLabel = Label(master=departureframe,
+                                        text=vertrek['RouteTekst'],
+                                        background='yellow',
+                                        foreground='black',
+                                        font=('Helvetica', 10, 'bold italic'),
+                                        anchor='w')
+            viaLabel.grid(row=row, column=1, sticky="ns", padx=10)
+        except:
+            print("Geen via")
+        row += 1
 
         departureInformation += 'Om ' + vertrektijd + ' vertrekt een trein naar ' + eindbestemming + '\n'
     mainframe.forget();
+
     departureframe.pack(fill=None, expand=False);
-    showinfo(message=departureInformation)
+
+    frame2 = Frame(departureframe)
+    frame2.grid(row=0, column=0, sticky="nw")
+
+    vsbar = Scrollbar(orient="vertical", command=canvas.yview)
+    vsbar.grid(row=0, column=3,sticky="ns")
+    canvas.configure(yscrollcommand=vsbar.set)
 
 
 #form functions to perform commands, functions need to remain outside the tkinter frame code (remain global)
@@ -87,8 +115,10 @@ button.pack()
 stationEntry = Entry(master=mainframe)
 stationEntry.pack()
 
-departureframe = Frame(master=root, width=250, height=100)
+departureframe = Frame(master=root, width=500, height=100, background="yellow")
 departureframe.pack(fill=None, expand=False)
+
+canvas = Canvas(departureframe, bg="Yellow")
 
 departureframe.forget()
 
