@@ -74,25 +74,27 @@ mainframe = Frame(master=root)
 mainframe.pack(fill="both", expand=False)
 
 mainlabel = Label(master=mainframe,
-              text='Een hele goede dag',
-              background='pink',
+              text='Een hele goede dag\nWelkom bij NS-reisinformatie\n\n\nVanaf waar wilt u reizen?',
+              background='yellow',
               foreground='blue',
-              font=('Helvetica', 16, 'bold italic'),
-              width=20,
-              height=10)
+              font=('Aldus', 20, 'bold'),
+              width=50,
+              height=15)
+
+mainlabel.pack()
+
+stationEntry = Entry(master=mainframe,)
+stationEntry.pack()
 
 button = Button(master=mainframe, text='Druk hier', command=stationClick)
 button.pack()
-
-stationEntry = Entry(master=mainframe)
-stationEntry.pack()
 
 departureframe = Frame(master=root, width=250, height=100)
 departureframe.pack(fill=None, expand=False)
 
 departureframe.forget()
 
-mainlabel.pack()
+
 
 # ensures the given command works
 
