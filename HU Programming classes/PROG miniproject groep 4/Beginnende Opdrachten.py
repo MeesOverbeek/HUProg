@@ -2,6 +2,7 @@ import requests
 import xmltodict
 import time
 from tkinter import *
+from tkinter import messagebox
 from tkinter import ttk
 from tkinter.messagebox import showinfo
 #from Treinfuncties import * #calls upon Treinfuncties.py
@@ -21,6 +22,7 @@ def vertrekker():
 
     if "error" in vertrekXML.keys():
         print(vertrekXML["error"]["message"])
+        messagebox.showerror('Foutmelding','Invoer is ongeldig, kijk of de naam van het station correct is ingevoerd')
         return
 
     departureInformation = "";
