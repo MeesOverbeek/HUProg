@@ -1,5 +1,7 @@
 import requests
 import xmltodict
+import dicttoxml
+import datetime
 import time
 from tkinter import *
 from tkinter import messagebox
@@ -7,43 +9,84 @@ from tkinter import ttk
 from tkinter.messagebox import showinfo
 #from Treinfuncties import * #calls upon Treinfuncties.py
 
-vertrekXML = {}
 
-def stationClick():
-    vertrekker()
-
-
-def vertrekker():
+def connectAPI(stationName):
+    lastStationName = ""
     try:
-        stationName = stationEntry.get()
+        stationNameFile = open("lastStationName.txt", "r+")
+        lastStationName = stationNameFile.read()
+        stationNameFile.close()
+    except:
+        stationNameFile = open("lastStationName.txt", "w")
+        stationNameFile.close()
+
+
+    try:
         authDetails = ('mees-overbeek@hotmail.com', 'xyy3hgLOXBq1i3sNZgp5qVwLPraeb4APZw_JI2iEB-zP3qfpfsj9fg')
         apiUrl = 'http://webservices.ns.nl/ns-api-avt?station=' + stationName
         response = requests.get(apiUrl, auth=authDetails)
 
         vertrekXML = xmltodict.parse(response.text)
 
+        if "error" in vertrekXML.keys():
+            print(vertrekXML["error"]["message"])
+            messagebox.showerror('Foutmelding',
+                                 'Invoer is ongeldig, kijk of de naam van het station correct is ingevoerd')
+            return
+
+        departuresFile = open("departures.xml", "w")
+        departuresFile.write(response.text)
+        departuresFile.close()
+        stationNameFile = open("lastStationName.txt", "w")
+        stationNameFile.write(stationName)
+        stationNameFile.close()
+
     except:
-        messagebox.showerror('Foutmelding', 'U bent niet verbonden met het internet, controleer uw internetverbinding en probeer het opnieuw.')
-        print("No internet connection")
 
-    if "error" in vertrekXML.keys():
-        print(vertrekXML["error"]["message"])
-        messagebox.showerror('Foutmelding',
-                             'Invoer is ongeldig, kijk of de naam van het station correct is ingevoerd')
-        return
+        if lastStationName == stationName:
+            departuresFile = open("departures.xml", "r")
+            vertrekXML = xmltodict.parse(departuresFile.read())
+            departuresFile.close()
 
+        else:
+            messagebox.showerror('Foutmelding', 'U bent niet verbonden met het internet, controleer uw internetverbinding en probeer het opnieuw.')
+
+
+    return vertrekXML
+
+def stationClick():
+    vertrekker()
+
+def backClick():
+    mainframe.pack()
+    for widget in departureframe.winfo_children():
+        widget.destroy()
+    departureframe.forget()
+
+
+def showDepartureVisuals(vertrekXML, stationName):
     departureInformation = "";
     row = 0;
+
+    backButton = Button(master=departureframe, text='<', command=backClick)
+    backButton.grid(row=row, column=0, sticky="ns", pady=(8, 0))
+    vertrektijdlabel = Label(master=departureframe,
+                             text=stationName,
+                             background='yellow',
+                             foreground='Blue',
+                             font=('Helvetica', 20, 'bold'),
+                             anchor=W)
+    vertrektijdlabel.grid(row=row, column=1, pady=(8, 0))
+
+    row += 1;
     for vertrek in vertrekXML['ActueleVertrekTijden']['VertrekkendeTrein']:
         if row >= 39:
             break
-        eindbestemming = vertrek['EindBestemming']
 
         vertrektijd = vertrek['VertrekTijd']
-
         vertrektijd = vertrektijd[11:19]
+        eindbestemming = vertrek['EindBestemming']
 
-        print(vertrek)
 
         vertrektijdlabel = Label(master=departureframe,
                                  text=vertrektijd,
@@ -89,10 +132,17 @@ def vertrekker():
             print("Geen via")
         row += 1
 
-        departureInformation += 'Om ' + vertrektijd + ' vertrekt een trein naar ' + eindbestemming + '\n'
-    mainframe.forget();
 
-    departureframe.pack(fill=None, expand=False);
+def vertrekker():
+    stationName = stationEntry.get()
+
+    vertrekXML = connectAPI(stationName)
+
+    showDepartureVisuals(vertrekXML, stationName)
+
+
+    mainframe.forget()
+    departureframe.pack(fill=None, expand=False)
 
 
 #form functions to perform commands, functions need to remain outside the tkinter frame code (remain global)
@@ -114,17 +164,14 @@ mainlabel.pack()
 stationEntry = Entry(master=mainframe,)
 stationEntry.pack()
 
-
 departureframe = Frame(master=root, width=500, height=100, background="yellow")
-
-button = Button(master=mainframe, text='Druk hier', command=stationClick)
-button.pack()
-
 departureframe.pack(fill=None, expand=False)
 
 departureframe.forget()
 
 
+button = Button(master=mainframe, text='Druk hier', command=stationClick)
+button.pack()
 
 # ensures the given command works
 
