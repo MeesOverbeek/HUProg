@@ -9,18 +9,20 @@ from tkinter import ttk
 from tkinter.messagebox import showinfo
 #from Treinfuncties import * #calls upon Treinfuncties.py
 
-
+#makes a connection with the api
 def connectAPI(stationName):
     lastStationName = ""
+    #try to open a file
     try:
         stationNameFile = open("lastStationName.txt", "r+")
         lastStationName = stationNameFile.read()
         stationNameFile.close()
+    #if failing to open the file because it doesn't exist, create a new one
     except:
         stationNameFile = open("lastStationName.txt", "w")
         stationNameFile.close()
 
-
+    #try to make a connection with the api
     try:
         authDetails = ('mees-overbeek@hotmail.com', 'xyy3hgLOXBq1i3sNZgp5qVwLPraeb4APZw_JI2iEB-zP3qfpfsj9fg')
         apiUrl = 'http://webservices.ns.nl/ns-api-avt?station=' + stationName
@@ -28,6 +30,7 @@ def connectAPI(stationName):
 
         vertrekXML = xmltodict.parse(response.text)
 
+        #if the api responded with an error code, show it in a messagebox
         if "error" in vertrekXML.keys():
             print(vertrekXML["error"]["message"])
             messagebox.showerror('Foutmelding',
@@ -40,30 +43,33 @@ def connectAPI(stationName):
         stationNameFile = open("lastStationName.txt", "w")
         stationNameFile.write(stationName)
         stationNameFile.close()
-
+    #if there was no connection with the api, check for a local file
     except:
 
+        #if the last looked up station has the same name as the current looked up station then open the local file and show that data.
         if lastStationName == stationName:
             departuresFile = open("departures.xml", "r")
             vertrekXML = xmltodict.parse(departuresFile.read())
             departuresFile.close()
-
+        #else show a messagebox that there was no connection with the internet
         else:
             messagebox.showerror('Foutmelding', 'U bent niet verbonden met het internet, controleer uw internetverbinding en probeer het opnieuw.')
 
 
     return vertrekXML
 
+#when clicking the look up button, show a screen with all the departures of the filled in station.
 def stationClick():
     vertrekker()
 
+#when clicking the back button, go back to the previous screen
 def backClick():
     mainframe.pack()
     for widget in departureframe.winfo_children():
         widget.destroy()
     departureframe.forget()
 
-
+#show the visuals of all the departures
 def showDepartureVisuals(vertrekXML, stationName):
     departureInformation = "";
     row = 0;
@@ -132,7 +138,7 @@ def showDepartureVisuals(vertrekXML, stationName):
             print("Geen via")
         row += 1
 
-
+#handles all the data and show the departure frame
 def vertrekker():
     stationName = stationEntry.get()
 
